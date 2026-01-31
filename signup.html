@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoviesFlix - Sign Up</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            /* Exact Netflix background image you requested */
+            background: url('https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-bcae-07a3f8dc141a/f6d7434e-d6de-4185-a6d4-c77a2d08737b/US-en-20220502-popsignuptwoweeks-perspective_alpha_website_large.jpg') center center/cover no-repeat fixed;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Dark overlay – same as Sign In page */
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: -1;
+        }
+
+        .auth-box {
+            background: rgba(0, 0, 0, 0.75);
+            padding: 60px 68px 40px;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .auth-box h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e50914; /* Netflix red */
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #cccccc;
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .auth-box input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #333333;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 1.05rem;
+            transition: all 0.2s;
+        }
+
+        .auth-box input:focus {
+            outline: none;
+            background: #444444;
+        }
+
+        .btn-signup {
+            width: 100%;
+            padding: 16px;
+            background: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin: 24px 0 12px;
+        }
+
+        .btn-signup:hover {
+            background: #f40612;
+        }
+
+        .btn-signup:disabled {
+            background: #666666;
+            cursor: not-allowed;
+        }
+
+        .error-msg {
+            color: #e87c03;
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 20px;
+            background: rgba(232, 124, 3, 0.15);
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(232, 124, 3, 0.4);
+            display: none;
+        }
+
+        .signin-now {
+            text-align: center;
+            color: #b3b3b3;
+            font-size: 1.05rem;
+            margin-top: 20px;
+        }
+
+        .signin-now a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signin-now a:hover {
+            text-decoration: underline;
+        }
+
+        /* Spinner (same as Sign In) */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .auth-box {
+                padding: 40px 24px 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-box">
+        <h1>MoviesFlix</h1>
+        <div class="subtitle">Create your account to start watching</div>
+
+        <div id="errorDisplay" class="error-msg"></div>
+
+        <form id="signupForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Email address" required autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Add a password" required autocomplete="new-password">
+                <span class="toggle-password" onclick="togglePassword()">👁</span>
+            </div>
+
+            <button type="submit" class="btn-signup" id="submitBtn">
+                <span class="spinner" id="btnSpinner"></span>
+                <span id="btnText">Create Account</span>
+            </button>
+        </form>
+
+        <div class="signin-now">
+            Already have an account? <a href="signin.html">Sign in now</a>.
+        </div>
+    </div>
+
+    <script>
+        const databaseURL = 'https://69763f18c0c36a2a99509fa2.mockapi.io/users';
+
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const type = input.type === 'password' ? 'text' : 'password';
+            input.type = type;
+
+            const icon = document.querySelector('.toggle-password');
+            icon.textContent = type === 'text' ? '🙈' : '👁';
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDisplay = document.getElementById('errorDisplay');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+
+            // Loading state
+            errorDisplay.style.display = 'none';
+            submitBtn.disabled = true;
+            btnText.textContent = "Creating Account...";
+            btnSpinner.style.display = "inline-block";
+
+            try {
+                // Block admin email from signup
+                if (email === "adminUday@netflix.com") {
+                    throw new Error("Admin account cannot be created manually.");
+                }
+
+                // Check if email already exists
+                const checkResponse = await fetch(databaseURL);
+                if (!checkResponse.ok) throw new Error("Network error");
+                
+                const existingUsers = await checkResponse.json();
+                if (existingUsers.some(u => u.email === email)) {
+                    throw new Error("This email is already registered.");
+                }
+
+                // Create new user
+                const response = await fetch(databaseURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: email, 
+                        password: password,
+                        name: email.split('@')[0] // optional
+                    })
+                });
+
+                if (response.ok) {
+                    // Success → redirect to sign in
+                    window.location.href = 'signin.html';
+                } else {
+                    throw new Error("Failed to create account.");
+                }
+            } catch (err) {
+                errorDisplay.style.display = 'block';
+                errorDisplay.textContent = err.message || "Connection error. Please try again.";
+                console.error("Signup Error:", err);
+            } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = "Create Account";
+                btnSpinner.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>

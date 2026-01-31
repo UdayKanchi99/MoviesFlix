@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoviesFlix - Watch TV Shows Online, Watch Movies Online</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- RESET & GLOBAL STYLES --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: #000;
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* --- UTILITIES --- */
+    .btn {
+      display: inline-block;
+      background: #e50914;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.18s ease;
+    }
+
+    .btn:hover {
+      background: #f40612;
+    }
+
+    .btn:active {
+      background: #c40c12;
+    }
+
+    .divider {
+      height: 8px;
+      background-color: #232323;
+      border: none;
+    }
+
+    /* --- LOGO STYLES --- */
+    .logo-link {
+      display: block;
+      line-height: 0;
+    }
+
+    .custom-logo {
+      height: 88px;
+      width: auto;
+      max-height: 88px;
+      object-fit: contain;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .logo-link:hover .custom-logo {
+      transform: scale(1.04);
+      filter: brightness(1.12);
+    }
+
+    /* --- HEADER / NAVBAR --- */
+    .header {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      max-height: 820px;
+      background: url('https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-bcae-07a3f8dc141a/f6d7434e-d6de-4185-a6d4-c77a2d08737b/US-en-20220502-popsignuptwoweeks-perspective_alpha_website_large.jpg') center center/cover no-repeat;
+      border-bottom: 8px solid #232323;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.3) 0%,
+        rgba(0,0,0,0.45) 35%,
+        rgba(0,0,0,0.8) 70%,
+        #000 100%
+      );
+      z-index: 1;
+    }
+
+    .navbar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4%;
+      max-width: 1920px;
+      margin: 0 auto;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .lang-select {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #808080;
+      color: white;
+      padding: 0.45rem 2.2rem 0.45rem 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .lang-select option {
+      background: #000;
+      color: white;
+    }
+
+    .btn-primary {
+      background: #e50914;
+      color: white;
+      padding: 8px 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 4px;
+      min-width: 100px;
+    }
+
+    .btn-primary:hover {
+      background: #f40612;
+    }
+
+    /* --- HERO CONTENT --- */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: calc(100% - 68px);
+      padding: 0 20px;
+    }
+
+    .hero-content h1 {
+      font-size: 3.8rem;
+      font-weight: 900;
+      max-width: 960px;
+      margin-bottom: 1.2rem;
+      line-height: 1.1;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+
+    .hero-content h2 {
+      font-size: 1.7rem;
+      font-weight: 400;
+      margin-bottom: 1.6rem;
+    }
+
+    .hero-content p {
+      font-size: 1.35rem;
+      margin-bottom: 1.8rem;
+      font-weight: 400;
+    }
+
+    /* --- EMAIL FORM --- */
+    .email-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .email-form input {
+      width: 100%;
+      padding: 1.25rem 1.4rem;
+      border-radius: 4px;
+      border: 1px solid #808080;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(4px);
+      color: white;
+      font-size: 1.1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .email-form input:focus {
+      border-color: #e50914;
+    }
+
+    .btn-large {
+      font-size: 1.65rem;
+      padding: 0.85rem 2rem;
+      font-weight: 600;
+      min-width: 200px;
+      min-height: 64px;
+    }
+
+    /* --- FEATURE SECTIONS --- */
+    .feature {
+      padding: 4.5rem 4%;
+      background: #000;
+      color: white;
+    }
+
+    .feature-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      gap: 5%;
+    }
+
+    .feature.reverse {
+      flex-direction: row-reverse;
+    }
+
+    .feature-text {
+      flex: 1;
+    }
+
+    .feature-text h2 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin-bottom: 1.2rem;
+      line-height: 1.1;
+    }
+
+    .feature-text p {
+      font-size: 1.45rem;
+      font-weight: 400;
+      color: #b3b3b3;
+      line-height: 1.4;
+    }
+
+    .feature-visual {
+      flex: 1;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    .feature-visual img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* --- FAQ SECTION --- */
+    .faq {
+      padding: 5rem 4%;
+      text-align: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .faq h2 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin-bottom: 2.2rem;
+    }
+
+    .accordion {
+      max-width: 815px;
+      margin: 0 auto 3rem;
+      text-align: left;
+    }
+
+    .accordion-item {
+      background-color: #221f1f;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .accordion-btn {
+      width: 100%;
+      padding: 1.4rem 1.8rem;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.45rem;
+      font-weight: 400;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .accordion-btn span {
+      font-size: 2.8rem;
+      font-weight: 300;
+      line-height: 0.6;
+      transform: rotate(0deg);
+      transition: transform 0.25s;
+    }
+
+    .accordion-item.active .accordion-btn span {
+      transform: rotate(45deg);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.28s cubic-bezier(0.5, 0, 0.1, 1);
+      background-color: #221f1f;
+      padding: 0 1.8rem;
+    }
+
+    .accordion-content p {
+      font-size: 1.4rem;
+      padding: 1.6rem 0;
+      line-height: 1.45;
+      color: #b3b3b3;
+    }
+
+    .faq-cta {
+      font-size: 1.35rem;
+      margin: 2rem 0 1.5rem;
+    }
+
+    /* --- FOOTER --- */
+    .footer {
+      padding: 4.5rem 4% 3rem;
+      color: #777;
+      font-size: 0.95rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .footer a {
+      color: #777;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+      color: #e5e5e5;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 2.5rem 0;
+    }
+
+    .footer .lang-select {
+      background: #000;
+      border: 1px solid #333;
+      color: #777;
+      padding: 0.6rem 2.4rem 0.6rem 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .legal-text {
+      font-size: 0.8rem;
+      color: #444;
+      margin-top: 2.5rem;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (min-width: 960px) {
+      .email-form {
+        flex-direction: row;
+        align-items: stretch;
+        height: 60px;
+        gap: 0;
+      }
+      .email-form input {
+        flex: 1;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        height: 100%;
+      }
+      .email-form button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        height: 100%;
+        min-width: 180px;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .hero-content h1 { font-size: 2.4rem; }
+      .hero-content h2 { font-size: 1.3rem; }
+      .feature-content { flex-direction: column; text-align: center; }
+      .feature.reverse { flex-direction: column-reverse; }
+      .feature-text { margin-bottom: 2.5rem; }
+      .feature-text h2 { font-size: 2.2rem; }
+      .feature-text p { font-size: 1.2rem; }
+      .footer-links { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .navbar { padding: 1.2rem 5%; }
+      .custom-logo { height: 32px; max-height: 40px; }
+      .hero-content h1 { font-size: 1.9rem; }
+      .hero-content h2 { font-size: 1.1rem; }
+      .footer-links { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header / Hero Section -->
+  <header class="header">
+    <nav class="navbar">
+      <!-- === Custom Logo Image === -->
+      <a href="#" class="logo-link">
+        <img 
+          src="MoviesFlix Logo.png" 
+          alt="MoviesFlix" 
+          class="custom-logo"
+        >
+      </a>
+
+      <div class="nav-right">
+        <select class="lang-select">
+          <option>English</option>
+          <option>हिन्दी</option>
+        </select>
+        <button class="btn btn-primary" onclick="window.location.href='signin.html'">Sign In</button>
+      </div>
+    </nav>
+
+    <div class="hero-content">
+      <h1>Unlimited movies, TV shows and more</h1>
+      <h2>Watch anywhere. Cancel anytime.</h2>
+      <p>Ready to watch? Enter your email to create or restart your membership.</p>
+
+      <form class="email-form top-form" id="landingForm">
+        <input type="email" id="emailInput" placeholder="Email address" required aria-label="Email address">
+        <button type="submit" class="btn btn-primary btn-large">Get Started ></button>
+      </form>
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <main>
+    <!-- Feature 1 -->
+    <section class="feature">
+      <div class="feature-content">
+        <div class="feature-text">
+          <h2>Enjoy on your TV</h2>
+          <p>Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players and more.</p>
+        </div>
+        <div class="feature-visual">
+          <img src="https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?q=80&w=1000&auto=format&fit=crop" alt="TV">
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Feature 2 -->
+    <section class="feature">
+      <div class="feature-content reverse">
+        <div class="feature-text">
+          <h2>Download your shows to watch offline</h2>
+          <p>Save your favourites easily and always have something to watch.</p>
+        </div>
+        <div class="feature-visual">
+          <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1000&auto=format&fit=crop" alt="Mobile">
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Feature 3 -->
+    <section class="feature">
+      <div class="feature-content">
+        <div class="feature-text">
+          <h2>Watch everywhere</h2>
+          <p>Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV.</p>
+        </div>
+        <div class="feature-visual">
+          <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?q=80&w=1000&auto=format&fit=crop" alt="Devices">
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Feature 4 -->
+    <section class="feature">
+      <div class="feature-content reverse">
+        <div class="feature-text">
+          <h2>Create profiles for kids</h2>
+          <p>Send children on adventures with their favourite characters in a space made just for them—free with your membership.</p>
+        </div>
+        <div class="feature-visual">
+          <img src="https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&w=1000&auto=format&fit=crop" alt="Kids">
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+      <h2>Frequently Asked Questions</h2>
+      
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-btn">
+            What is MoviesFlix?
+            <span>+</span>
+          </button>
+          <div class="accordion-content">
+            <p>MoviesFlix is a streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries and more – on thousands of internet-connected devices.<br><br>You can watch as much as you want, whenever you want without a single commercial – all for one low monthly price. There's always something new to discover and new TV shows and movies are added every week!</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-btn">
+            How much does MoviesFlix cost?
+            <span>+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Watch MoviesFlix on your smartphone, tablet, Smart TV, laptop, or streaming device, all for one fixed monthly fee. Plans range from ₹149 to ₹649 a month. No extra costs, no contracts.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-btn">
+            Where can I watch?
+            <span>+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Watch anywhere, anytime. Sign in with your MoviesFlix account to watch instantly on the web at moviesflix.com from your personal computer or on any internet-connected device that offers the MoviesFlix app, including smart TVs, smartphones, tablets, streaming media players and game consoles.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-btn">
+            How do I cancel?
+            <span>+</span>
+          </button>
+          <div class="accordion-content">
+            <p>MoviesFlix is flexible. There are no pesky contracts and no commitments. You can easily cancel your account online in two clicks. There are no cancellation fees – start or stop your account anytime.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="faq-cta">Ready to watch? Enter your email to create or restart your membership.</p>
+      <form class="email-form bottom-form" id="landingForm2">
+        <input type="email" placeholder="Email address" required aria-label="Email address">
+        <button type="submit" class="btn btn-primary btn-large">Get Started ></button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <p>Questions? Call <a href="#">000-800-040-1843</a></p>
+      <div class="footer-links">
+        <a href="#">FAQ</a>
+        <a href="#">Help Centre</a>
+        <a href="#">Account</a>
+        <a href="#">Media Centre</a>
+        <a href="#">Investor Relations</a>
+        <a href="#">Jobs</a>
+        <a href="#">Ways to Watch</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Privacy</a>
+        <a href="#">Cookie Preferences</a>
+        <a href="#">Corporate Information</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Speed Test</a>
+        <a href="#">Legal Notices</a>
+        <a href="#">Only on MoviesFlix</a>
+      </div>
+      <select class="lang-select">
+        <option>English</option>
+        <option>हिन्दी</option>
+      </select>
+      <p>MoviesFlix India</p>
+      
+      <p class="legal-text">
+         MoviesFlix is a demo site for educational purposes only.<br>
+         This site is not affiliated with Netflix, Inc. or any other streaming service.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // --- FAQ ACCORDION LOGIC ---
+    document.querySelectorAll('.accordion-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const item = button.parentElement;
+        const content = button.nextElementSibling;
+
+        item.classList.toggle('active');
+
+        if (item.classList.contains('active')) {
+          content.style.maxHeight = content.scrollHeight + "px";
+        } else {
+          content.style.maxHeight = 0;
+        }
+
+        document.querySelectorAll('.accordion-item').forEach(otherItem => {
+          if (otherItem !== item && otherItem.classList.contains('active')) {
+            otherItem.classList.remove('active');
+            otherItem.querySelector('.accordion-content').style.maxHeight = 0;
+          }
+        });
+      });
+    });
+
+    // --- FORM SUBMISSION / REDIRECT LOGIC ---
+    function handleFormSubmit(event) {
+      event.preventDefault(); 
+      
+      const input = event.target.querySelector('input[type="email"]');
+      const email = input.value.trim();
+
+      if (email) {
+        localStorage.setItem('userEmail', email);
+        window.location.href = 'signin.html';
+      }
+    }
+
+    document.getElementById('landingForm')?.addEventListener('submit', handleFormSubmit);
+    document.getElementById('landingForm2')?.addEventListener('submit', handleFormSubmit);
+  </script>
+</body>
+</html>

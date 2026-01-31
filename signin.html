@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoviesFlix - Sign In</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            /* Netflix background image exactly as you requested */
+            background: url('https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-bcae-07a3f8dc141a/f6d7434e-d6de-4185-a6d4-c77a2d08737b/US-en-20220502-popsignuptwoweeks-perspective_alpha_website_large.jpg') center center/cover no-repeat fixed;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Dark overlay to make text readable (Netflix style) */
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            /* Netflix uses ~0.6-0.7 opacity */
+            z-index: -1;
+        }
+
+        /* Auth container – Netflix-like dark semi-transparent box */
+        .auth-box {
+            background: rgba(0, 0, 0, 0.75);
+            padding: 60px 68px 40px;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Logo */
+        .auth-box h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e50914;
+            /* Netflix red */
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #cccccc;
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+        }
+
+        /* Inputs – Netflix style */
+        .input-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .auth-box input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #333333;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 1.05rem;
+            transition: all 0.2s;
+        }
+
+        .auth-box input:focus {
+            outline: none;
+            background: #444444;
+        }
+
+        /* Password eye icon */
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999999;
+            font-size: 1.3rem;
+        }
+
+        .toggle-password:hover {
+            color: #ffffff;
+        }
+
+        /* Button – Netflix red */
+        .btn-signin {
+            width: 100%;
+            padding: 16px;
+            background: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin: 24px 0 12px;
+        }
+
+        .btn-signin:hover {
+            background: #f40612;
+        }
+
+        .btn-signin:disabled {
+            background: #666666;
+            cursor: not-allowed;
+        }
+
+        /* Helpers */
+        .form-help {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #b3b3b3;
+            margin: 12px 0 32px;
+        }
+
+        .form-help label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .form-help input[type="checkbox"] {
+            accent-color: #e50914;
+        }
+
+        .form-help a {
+            color: #737373;
+            text-decoration: none;
+        }
+
+        .form-help a:hover {
+            text-decoration: underline;
+            color: #ffffff;
+        }
+
+        .error-msg {
+            color: #e87c03;
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 20px;
+            background: rgba(232, 124, 3, 0.15);
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(232, 124, 3, 0.4);
+            display: none;
+        }
+
+        /* Footer link */
+        .signup-now {
+            text-align: center;
+            color: #b3b3b3;
+            font-size: 1.05rem;
+            margin-top: 20px;
+        }
+
+        .signup-now a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signup-now a:hover {
+            text-decoration: underline;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-box {
+                padding: 40px 24px 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-box">
+        <!-- Branding -->
+        <h1>MoviesFlix</h1>
+        <div class="subtitle">Sign in to continue watching</div>
+
+        <!-- Error -->
+        <div id="errorDisplay" class="error-msg"></div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Email or phone number" required autocomplete="email">
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
+                <span class="toggle-password" onclick="togglePassword()">👁</span>
+            </div>
+
+            <button type="submit" class="btn-signin" id="submitBtn">
+                <span class="spinner" id="btnSpinner"></span>
+                <span id="btnText">Sign In</span>
+            </button>
+
+            <div class="form-help">
+                <label>
+                    <input type="checkbox" checked> Remember me
+                </label>
+                <a href="#">Need help?</a>
+            </div>
+        </form>
+
+        <div class="signup-now">
+            New to MoviesFlix? <a href="signup.html">Sign up now</a>.
+        </div>
+    </div>
+
+    <script>
+        const databaseURL = 'https://69763f18c0c36a2a99509fa2.mockapi.io/users';
+
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const type = input.type === 'password' ? 'text' : 'password';
+            input.type = type;
+
+            const icon = document.querySelector('.toggle-password');
+            icon.textContent = type === 'text' ? '🙈' : '👁';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDisplay = document.getElementById('errorDisplay');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+
+            // Reset & loading state
+            errorDisplay.style.display = 'none';
+            submitBtn.disabled = true;
+            btnText.textContent = "Signing In...";
+            btnSpinner.style.display = "inline-block";
+
+            try {
+                // Admin check
+                if (email === "adminUday@netflix.com" && password === "Siva@9948") {
+                    window.location.href = 'admin_panel_mockapi.html';
+                    return;
+                }
+
+                const response = await fetch(databaseURL);
+                if (!response.ok) throw new Error("Network error");
+
+                const users = await response.json();
+                const validUser = users.find(u => u.email === email && u.password === password);
+
+                if (validUser) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('currentUser', email);
+                    window.location.href = 'browse.html';
+                } else {
+                    throw new Error("Invalid email or password.");
+                }
+            } catch (err) {
+                errorDisplay.style.display = 'block';
+                errorDisplay.textContent = err.message || "Something went wrong. Please try again.";
+                console.error(err);
+            } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = "Sign In";
+                btnSpinner.style.display = "none";
+            }
+        });
+    </script>
+</body>
+
+</html>
